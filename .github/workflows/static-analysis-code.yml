@@ -59,3 +59,34 @@ jobs:
       - name: Run PHPStan (Larastan)
         run: |
           vendor/bin/phpstan analyse --configuration=phpstan.neon
+      # ---------- Semgrep SAST ----------
+      - name: Set up Python
+        if: always()
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Semgrep
+        if: always()
+        run: |
+          python -m venv /tmp/semgrep-venv
+          /tmp/semgrep-venv/bin/pip install semgrep
+
+      - name: Run Semgrep SAST
+        if: always()
+        run: |
+          /tmp/semgrep-venv/bin/semgrep scan \
+            --config p/php \
+            --config p/security-audit \
+            --error \
+            --json \
+            --output semgrep-report.json \
+            .
+
+      - name: Upload SAST report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sast-report
+          path: semgrep-report.json
+          if-no-files-found: ignore
