@@ -35,5 +35,4 @@ class OperationsController extends Controller
             'length' => strlen($password),
         ]);
     }
-
 }

@@ -8,6 +8,7 @@ use Tests\TestCase;
 class ExampleTest extends TestCase
 {
     private const ENDPOINT = '/api/generate-password';
+
     /**
      * A basic test example.
      */
@@ -36,11 +37,12 @@ class ExampleTest extends TestCase
         $this->assertIsString($password);
         $this->assertSame(20, strlen($password));
     }
+
     public function test_it_generates_a_password_with_custom_length(): void
     {
         foreach ([12, 16, 24, 64, 128] as $length) {
             $response = $this->getJson(
-                self::ENDPOINT . '?length=' . $length
+                self::ENDPOINT.'?length='.$length
             );
 
             $response->assertOk()
@@ -58,7 +60,7 @@ class ExampleTest extends TestCase
     {
         foreach ([1, 8, 11] as $length) {
             $this->getJson(
-                self::ENDPOINT . '?length=' . $length
+                self::ENDPOINT.'?length='.$length
             )
                 ->assertUnprocessable()
                 ->assertJsonValidationErrors(['length']);
@@ -69,7 +71,7 @@ class ExampleTest extends TestCase
     {
         foreach ([129, 150, 256] as $length) {
             $this->getJson(
-                self::ENDPOINT . '?length=' . $length
+                self::ENDPOINT.'?length='.$length
             )
                 ->assertUnprocessable()
                 ->assertJsonValidationErrors(['length']);
@@ -80,7 +82,7 @@ class ExampleTest extends TestCase
     {
         foreach (['abc', '12.5', '-5'] as $length) {
             $this->getJson(
-                self::ENDPOINT . '?length=' . $length
+                self::ENDPOINT.'?length='.$length
             )
                 ->assertUnprocessable()
                 ->assertJsonValidationErrors(['length']);
@@ -90,7 +92,7 @@ class ExampleTest extends TestCase
     public function test_it_generates_a_password_without_spaces(): void
     {
         $response = $this->getJson(
-            self::ENDPOINT . '?length=128'
+            self::ENDPOINT.'?length=128'
         );
 
         $response->assertOk();
@@ -106,7 +108,7 @@ class ExampleTest extends TestCase
     public function test_generated_password_uses_supported_character_types(): void
     {
         $response = $this->getJson(
-            self::ENDPOINT . '?length=128'
+            self::ENDPOINT.'?length=128'
         );
 
         $response->assertOk();
@@ -121,8 +123,8 @@ class ExampleTest extends TestCase
 
     public function test_it_generates_different_passwords(): void
     {
-        $first = $this->getJson(self::ENDPOINT . '?length=32');
-        $second = $this->getJson(self::ENDPOINT . '?length=32');
+        $first = $this->getJson(self::ENDPOINT.'?length=32');
+        $second = $this->getJson(self::ENDPOINT.'?length=32');
 
         $first->assertOk();
         $second->assertOk();
