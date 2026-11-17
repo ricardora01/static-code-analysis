@@ -80,7 +80,7 @@ class ExampleTest extends TestCase
 
     public function test_it_rejects_non_integer_lengths(): void
     {
-        foreach (['abc', '12.5', '26'] as $length) {
+        foreach (['abc', '12.5', '-10'] as $length) {
             $this->getJson(
                 self::ENDPOINT.'?length='.$length
             )
